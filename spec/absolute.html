@@ -325,7 +325,7 @@
         1. If _timeZone_ is *undefined*, then
           1. Set _timeZone_ to *"UTC"*.
         1. Let _timeZone_ be ? ToTimeZone(_timeZone_).
-        1. Return ? GetDateTimeFor(_timeZone_, _absolute_);
+        1. Return ? GetDateTimeFor(_timeZone_, _absolute_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -387,7 +387,7 @@
         1. Assert: _absolute_ has an [[InitializedTemporalAbsolute]] internal slot.
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: _timeZone_ has an [[InitializedTemporalTimeZone]] internal slot.
-        1. Let _dateTime_ be ? GetDateTimeFor(_timeZone_, _absolute_);
+        1. Let _dateTime_ be ? GetDateTimeFor(_timeZone_, _absolute_).
         1. Let _dateTimeString_ be ! DateTimeToString(_dateTime_).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _absolute_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
