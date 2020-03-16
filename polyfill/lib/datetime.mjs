@@ -197,7 +197,7 @@ export class DateTime {
       nanosecond,
       disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(
+    const result = new Construct(
       year,
       month,
       day,
@@ -208,6 +208,8 @@ export class DateTime {
       microsecond,
       nanosecond,
     );
+    if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   minus(durationLike, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
@@ -244,7 +246,7 @@ export class DateTime {
       nanosecond,
       disambiguation));
     const Construct = ES.SpeciesConstructor(this, DateTime);
-    return new Construct(
+    const result = new Construct(
       year,
       month,
       day,
@@ -255,6 +257,8 @@ export class DateTime {
       microsecond,
       nanosecond,
     );
+    if (!ES.IsDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   difference(other, options) {
     if (!ES.IsDateTime(this)) throw new TypeError('invalid receiver');
