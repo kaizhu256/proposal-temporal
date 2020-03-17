@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:javascript": "rollup -m -c rollup.config.ejs",
-    "build:html": "node build-html.script"
+    "build:html": "node build-html.javascript"
   },
   "repository": {
     "type": "git",

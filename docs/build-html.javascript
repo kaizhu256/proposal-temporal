@@ -1,6 +1,9 @@
 /*
- * build-html.script
- * this js-file has funky .script extension to avoid being copied to /out/docs/
+ * build-html.javascript
+ * This program converts files in /docs/*.md to /out/docs/*.html
+ *
+ * This program-file has extension .javascript instead of .js
+ * to avoid being copied to /out/docs/ by external build-scripts.
  */
 /*jslint node*/
 "use strict";

@@ -18,12 +18,12 @@
     "cookbook": "cd polyfill && npm install && npm run cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs",
-    "build:prepare": "mkdir -p out/docs || mkdir out\\docs || exit 0",
+    "build:prepare": "mkdir -p out/docs || mkdir out\\docs || rem 0",
     "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
     "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && (cp docs/*.js docs/*.js.map out/docs/ || (copy docs\\*.js out\\docs\\ && copy docs\\*.js.map out\\docs))",
     "build:docs": "cd docs && npm install && npm run build:html && cd .. && (cp docs/*.html docs/*.css out/docs/ || (copy docs\\*.html out\\docs\\ && copy docs\\*.css out\\docs))",
     "build:spec": "ecmarkup spec.html out/index.html",
-    "prebuild": "mkdir -p out/docs || mkdir out\\docs || exit 0",
+    "prebuild": "mkdir -p out/docs || mkdir out\\docs || rem 0",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
   },
   "repository": {
