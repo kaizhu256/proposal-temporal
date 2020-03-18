@@ -27,8 +27,10 @@ tail = fs.readFileSync("tail.html.part", "utf8");
 fs.readdirSync(".").forEach(function (file) {
     let data;
     switch (path.extname(file)) {
-    // copy files *.css to /out/docs
+    // copy files *.css, *.html, *.js to /out/docs
     case ".css":
+    case ".html":
+    case ".js":
         fs.copyFileSync(file, directoryOutDocs + file);
         return;
     // convert files *.md to *.html
