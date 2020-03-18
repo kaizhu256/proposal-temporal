@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <script type="application/javascript" src="./prism.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+      }
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <strong>This polyfill is a work in progress.</strong>
+      It does not represent the final API of this proposal, nor even the current consensus.
+    </div>
+<h1 id="temporal-cookbook">Temporal Cookbook</h1>
+<h2 id="running-the-cookbook-files">Running the cookbook files</h2>
+<p>Running cookbook files:</p>
+<pre><code class="language-sh">node --experimental-modules --no-warnings \
+    --icu-data-dir ./polyfill/node_modules/full-icu/ \
+    -r ./polyfill/index.js ./docs/cookbook/${cookbookFile}</code></pre>
+<p><em>The above code allows <code>Temporal</code> to exist as a global object before the cookbook file runs.</em></p>
+<h2 id="construction">Construction</h2>
+<h3 id="absolute-from-legacy-date"><a href="./cookbook/absoluteFromLegacyDate.mjs">Absolute from legacy Date</a></h3>
+<p>Map a legacy ECMAScript Date instance into a Temporal.Absolute instance corresponding to the same instant in absolute time.</p>
+<pre><code class="language-javascript">import assert from &quot;assert&quot;;
+
+/**
+ * Converts a Date instance into a Temporal.Absolute instance
+ *
+ * @param {Date} esDate This is a Date instance
+ * @returns {Temporal.Absolute} Temporal.Absolute instance
+ */
+function getAbsoluteFromDate(esDate) {
+    const date = Temporal.Absolute.fromEpochMilliseconds(esDate.getTime());
+    return date;
+}
+
+const date = new Date(&quot;1970-01-01T00:00:01Z&quot;);
+const absolute = getAbsoluteFromDate(date);
+assert(absolute instanceof Temporal.Absolute);</code></pre>
+<h3 id="zoned-instant-from-instant-and-time-zone"><a href="./cookbook/getParseableZonedStringAtInstant.mjs">Zoned instant from instant and time zone</a></h3>
+<p>Map a Temporal.Absolute instance and a time zone name into a string serialization of the local time in that zone corresponding to the instant in absolute time.</p>
+<pre><code class="language-javascript">import assert from &quot;assert&quot;;
+
+/**
+ * Converts an absolute point in time to a readable string of a specified time zone
+ *
+ * @param {Temporal.Absolute} absolute An absolute point in time
+ * @param {Temporal.TimeZone|string} absolute An absolute point in time
+ * @returns {string} IANA Timezone
+ */
+function getParseableZonedStringAtInstant(absolute, ianaTimeZoneName) {
+    // inTimeZone accepts either a timezone string or a Temporal.TimeZone object
+    // It returns a DateTime object
+    const localDateTime = absolute.inTimeZone(ianaTimeZoneName);
+    return localDateTime.toString();
+}
+
+const absoluteTime = Temporal.Absolute.from(&quot;2020-01-03T10:41:51Z&quot;);
+const timeZone = &quot;Europe/Paris&quot;;
+const result = getParseableZonedStringAtInstant(absoluteTime, timeZone);
+assert.equal(result, &#39;2020-01-03T11:41:51&#39;);</code></pre>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+    <script>
+      // Add permalinks to all <h3> elements (function documentation headings)
+      const h3s = document.getElementsByTagName('h3');
+      for (let h3 of h3s) {
+        const anchor = document.createElement('a');
+        anchor.className = 'heading-link';
+
+        // Use the **function name** as the link ID, otherwise fall back to the
+        // ID generated by markdown
+        let id = h3.getAttribute('id');
+        const bold = h3.getElementsByTagName('strong');
+        if (bold[0]) {
+          id = bold[0].textContent.replace(/[^a-zA-Z]/g, '-');
+          h3.setAttribute('id', id);
+        }
+
+        anchor.setAttribute('href', `#${id}`);
+        h3.prepend(anchor);
+      };
+    </script>
+  </body>
+</html>
