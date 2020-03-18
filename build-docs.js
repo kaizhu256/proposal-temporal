@@ -1,9 +1,6 @@
 /*
  * build-html.javascript
  * This program will copy/convert files in /docs/ to /out/docs/
- *
- * This program-file has extension .javascript instead of .js
- * to avoid being copied to /out/docs/ by external build-scripts.
  */
 /*jslint node*/
 "use strict";
