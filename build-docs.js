@@ -4,22 +4,16 @@
  */
 /*jslint node*/
 "use strict";
-let directoryOutDocs;
-let fs;
-let head;
-let marked;
-let path;
-let tail;
+// init toplevel variables
 // chdir to /docs/
 process.chdir("docs");
 // require modules
-fs = require("fs");
-marked = require("marked");
-path = require("path");
-// init toplevel variables
-directoryOutDocs = path.normalize("../out/docs/0").slice(0, -1);
-head = fs.readFileSync("head.html.part", "utf8");
-tail = fs.readFileSync("tail.html.part", "utf8");
+let fs = require("fs");
+let marked = require("marked");
+let path = require("path");
+let directoryOutDocs = path.normalize("../out/docs/0").slice(0, -1);
+let head = fs.readFileSync("head.html.part", "utf8");
+let tail = fs.readFileSync("tail.html.part", "utf8");
 // process files in /docs/
 fs.readdirSync(".").forEach(function (file) {
     let data;
