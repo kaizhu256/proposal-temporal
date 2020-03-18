@@ -1,5 +1,5 @@
 /*
- * build-html.javascript
+ * build-docs.js
  * This program will copy/convert files in /docs/ to /out/docs/
  */
 /*jslint node*/
