@@ -5,10 +5,10 @@ import resolve from "@rollup/plugin-node-resolve";
 import {uglify} from 'rollup-plugin-uglify';
 
 export default {
-  input: "../polyfill/lib/index.mjs",
+  input: "polyfill/lib/index.mjs",
   output: {
     name: "temporal",
-    file: "playground.js",
+    file: "out/docs/playground.js",
     format: "umd",
     lib: ["es6"]
   },
@@ -17,7 +17,7 @@ export default {
     builtins(),
     resolve({ preferBuiltins: false }),
     babel({
-      exclude: '../polyfill/lib/node_modules/**',
+      exclude: 'polyfill/lib/node_modules/**',
       presets: [
         [
           "@babel/preset-env",
