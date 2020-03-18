@@ -1,6 +1,6 @@
 /*
  * build-html.javascript
- * This program converts files in /docs/*.md to /out/docs/*.html
+ * This program will copy/convert files in /docs/ to /out/docs/
  *
  * This program-file has extension .javascript instead of .js
  * to avoid being copied to /out/docs/ by external build-scripts.
