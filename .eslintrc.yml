@@ -18,7 +18,6 @@ ignorePatterns:
   - /polyfill/test262/
   # Specific vendored or generated files
   - /docs/mermaid.js
-  - /docs/playground.js
   - /docs/prism.js
   - /polyfill/index.js
   - /polyfill/script.js
