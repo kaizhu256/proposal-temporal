@@ -2,7 +2,6 @@
  * build-docs.js
  * This program will copy/convert files in /docs/ to /out/docs/
  */
-/*jslint node*/
 "use strict";
 // init toplevel variables
 // chdir to /docs/
@@ -18,18 +17,18 @@ let tail = fs.readFileSync("tail.html.part", "utf8");
 fs.readdirSync(".").forEach(function (file) {
     let data;
     switch (path.extname(file)) {
-    // copy files *.css, *.html, *.js to /out/docs
-    case ".css":
-    case ".html":
-    case ".js":
-        fs.copyFileSync(file, directoryOutDocs + file);
-        return;
-    // convert files *.md to *.html
-    case ".md":
-        break;
-    // skip remaining files
-    default:
-        return;
+        // copy files *.css, *.html, *.js to /out/docs
+        case ".css":
+        case ".html":
+        case ".js":
+            fs.copyFileSync(file, directoryOutDocs + file);
+            return;
+        // convert files *.md to *.html
+        case ".md":
+            break;
+        // skip remaining files
+        default:
+            return;
     }
     data = fs.readFileSync(file, "utf8");
     // replace links *.md with *.html
