@@ -7,9 +7,18 @@
     "node": ">=12.16.0"
   },
   "dependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "babel-eslint": "^10.0.3",
     "ecmarkup": "^3.16.0",
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "marked": "^0.7.0",
+    "rollup": "^1.23.1",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-uglify": "^6.0.4"
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run cookbook && npm run test262 && cd ..",
@@ -18,9 +27,8 @@
     "cookbook": "cd polyfill && npm install && npm run cookbook && cd ..",
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs",
-    "build:polyfill": "cd polyfill && npm install && npm run build && cd ..",
-    "build:javascript": "npm run build:polyfill && cd docs && npm install && npm run build:javascript && cd .. && (cp docs/*.js docs/*.js.map out/docs/ || (copy docs\\*.js out\\docs\\ && copy docs\\*.js.map out\\docs))",
-    "build:docs": "cd docs && npm install && npm run build:html && cd .. && (cp docs/*.html docs/*.css out/docs/ || (copy docs\\*.html out\\docs\\ && copy docs\\*.css out\\docs))",
+    "build:javascript": "cd polyfill && npm install && npm run build && cd .. && rollup -m -c rollup.config.ejs",
+    "build:docs": "node build-docs.js",
     "build:spec": "ecmarkup spec.html out/index.html",
     "prebuild": "mkdir -p out/docs || mkdir out\\docs || rem 0",
     "build": "npm run build:javascript && npm run build:docs && npm run build:spec"
