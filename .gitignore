@@ -6,4 +6,3 @@ polyfill/script.js.map
 polyfill/test262/
 out/
 .vscode/
-package-lock.json
