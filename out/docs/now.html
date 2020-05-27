@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <script type="application/javascript" src="./mermaid.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>mermaid.initialize({startOnLoad:true,flowchart:{useMaxWidth:false}});</script>
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      .mermaid svg { height: 13em; }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+      }
+      pre { border-left: 4px solid var(--variable); }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <strong>This polyfill is a work in progress.</strong>
+      It does not represent the final API of this proposal, nor even the current consensus.
+    </div>
+<h1 id="temporalnow-1"><code>Temporal.now</code></h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#methods">Methods</a>
+<ul>
+<li><a href="#absolute">absolute</a>
+</li>
+<li><a href="#timeZone">timeZone</a>
+</li>
+<li><a href="#dateTime">dateTime</a>
+</li>
+<li><a href="#date">date</a>
+</li>
+<li><a href="#time">time</a>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+
+<p>The <code>Temporal.now</code> object has several methods which give information about the current time and date.</p>
+<h2 id="methods-1">Methods</h2>
+<h3 id="absolute"><a class="heading-link" href="#absolute"></a>Temporal.now.<strong>absolute</strong>() : Temporal.Absolute</h3><p><strong>Returns:</strong> a <code>Temporal.Absolute</code> object representing the current system time.</p>
+<p>This method gets the current absolute system time, without regard to calendar or time zone.
+This is a good way to get a timestamp for an event, for example.
+It works like the old-style JavaScript <code>Date.now()</code>, but with nanosecond accuracy instead of milliseconds.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">timeit</span><span class="token punctuation">(</span><span class="token parameter">func</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    start <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+        end <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">The function took </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>end<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token function">timeit</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>someData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// example output:</span>
+<span class="token comment">// The function took PT0.001031756S</span></code></pre><h3 id="timeZone"><a class="heading-link" href="#timeZone"></a>Temporal.now.<strong>timeZone</strong>() : Temporal.TimeZone</h3><p><strong>Returns:</strong> a <code>Temporal.TimeZone</code> object representing the time zone according to the current system settings.</p>
+<p>This method gets the current system time zone.
+This will usually be a named <a href="https://www.iana.org/time-zones">IANA time zone</a>, as that is how most people configure their computers.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// When is the next daylight saving change from now, in the current location?</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">absolute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">[</span>nextTransition<span class="token punctuation">]</span> <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getTransitions</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+before <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">.</span><span class="token function">minus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>nanoseconds<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+after <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>nextTransition<span class="token punctuation">.</span><span class="token function">plus</span><span class="token punctuation">(</span><span class="token punctuation">{</span>nanoseconds<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">On </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>nextTransition<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> the clock will change from UTC </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>before<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> to </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>after<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+nextTransition<span class="token punctuation">.</span><span class="token function">inTimeZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// example output:</span>
+<span class="token comment">// On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00</span></code></pre><h3 id="dateTime"><a class="heading-link" href="#dateTime"></a>Temporal.now.<strong>dateTime</strong>(<em>timeZone</em>: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (optional <code>Temporal.TimeZone</code> or string): The time zone to get the current date and time in.
+If not given, the current system time zone will be used.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object representing the current system date and time.</p>
+<p>This method gets the current calendar date and wall-clock time according to the system settings.
+Optionally a time zone can be given in which the time is computed.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js">financialCentres <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token string">'New York'</span><span class="token operator">:</span> <span class="token string">'America/New_York'</span><span class="token punctuation">,</span>
+    <span class="token string">'London'</span><span class="token operator">:</span> <span class="token string">'Europe/London'</span><span class="token punctuation">,</span>
+    <span class="token string">'Tokyo'</span><span class="token operator">:</span> <span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Here: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>financialCentres<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>name<span class="token punctuation">,</span> timeZone<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span>timeZone<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// example output:</span>
+<span class="token comment">// Here: 2020-01-24T21:51:02.142905166</span>
+<span class="token comment">// New York: 2020-01-25T00:52:14.756462142</span>
+<span class="token comment">// London: 2020-01-25T05:52:14.758534756</span>
+<span class="token comment">// Tokyo: 2020-01-25T14:52:14.759534758</span></code></pre><h3 id="date"><a class="heading-link" href="#date"></a>Temporal.now.<strong>date</strong>(<em>timeZone</em>: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (optional <code>Temporal.TimeZone</code> or string): The time zone to get the current date and time in.
+If not given, the current system time zone will be used.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Date</code> object representing the current system date.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Is it Leap Day?</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">2</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">29</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Leap Day!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="time"><a class="heading-link" href="#time"></a>Temporal.now.<strong>time</strong>(<em>timeZone</em>: Temporal.TimeZone | string = Temporal.now.timeZone()) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>timeZone</code> (optional <code>Temporal.TimeZone</code> or string): The time zone to get the current date and time in.
+If not given, the current system time zone will be used.</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Time</code> object representing the current system time.</p>
+<p>This method gets the current wall-clock time according to the system settings.
+Optionally a time zone can be given in which the time is computed.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Is it lunchtime?</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>time<span class="token punctuation">.</span>hour <span class="token operator">===</span> <span class="token number">12</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Lunchtime!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
